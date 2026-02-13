@@ -1,0 +1,247 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - ecommerce-network
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./gateway:/app
+      - /app/node_modules
+    environment:
+      - PORT=3000
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    command: npm run dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./services/user-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3001
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  product-service:
+    build: ./services/product-service
+    container_name: product-service
+    command: npm run dev
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./services/product-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3002
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  order-service:
+    build: ./services/order-service
+    container_name: order-service
+    command: npm run dev
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./services/order-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3003
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  payment-service:
+    build: ./services/payment-service
+    container_name: payment-service
+    command: npm run dev
+    ports:
+      - "3004:3004"
+    volumes:
+      - ./services/payment-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3004
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  cart-service:
+    build: ./services/cart-service
+    container_name: cart-service
+    command: npm run dev
+    ports:
+      - "3005:3005"
+    volumes:
+      - ./services/cart-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3005
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  notification-service:
+    build: ./services/notification-service
+    container_name: notification-service
+    command: npm run dev
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./services/notification-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3006
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  seller-service:
+    build: ./services/seller-service
+    container_name: seller-service
+    command: npm run dev
+    ports:
+      - "3007:3007"
+    volumes:
+      - ./services/seller-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3007
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  inventory-service:
+    build: ./services/inventory-service
+    container_name: inventory-service
+    command: npm run dev
+    ports:
+      - "3010:3010"
+    volumes:
+      - ./services/inventory-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3010
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  fulfillment-service:
+    build: ./services/fulfillment-service
+    container_name: fulfillment-service
+    command: npm run dev
+    ports:
+      - "3008:3008"
+    volumes:
+      - ./services/fulfillment-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3008
+      - RABBITMQ_URL=amqp://rabbitmq
+       # Assuming host.docker.internal works or use a mongo service if present. 
+      # Wait, user-service doesn't have MONGO_URI here, so it must be in .env inside container or similar.
+      # If other services work without it here, they probably have .env files.
+      # But I didn't create a .env file for fulfillment-service yet.
+      # Safest is to add it here or create .env. 
+      # I'll create .env next step to be consistent. 
+      # For now, let's just add the service definition.
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+  support-service:
+    build: ./services/support-service
+    container_name: support-service
+    command: npm run dev
+    ports:
+      - "3009:3009"
+    volumes:
+      - ./services/support-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3009
+      - RABBITMQ_URL=amqp://rabbitmq
+       # Assuming host.docker.internal works or use a mongo service if present. 
+      # Wait, user-service doesn't have MONGO_URI here, so it must be in .env inside container or similar.
+      # If other services work without it here, they probably have .env files.
+      # But I didn't create a .env file for fulfillment-service yet.
+      # Safest is to add it here or create .env. 
+      # I'll create .env next step to be consistent. 
+      # For now, let's just add the service definition.
+    depends_on:
+      - rabbitmq
+    networks:
+      - ecommerce-network
+
+  graphql-gateway:
+    build: ./graphql-gateway
+    container_name: graphql-gateway
+    command: npm run dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./graphql-gateway:/app
+      - /app/node_modules
+    environment:
+      - PORT=4000
+      - USER_SERVICE_URL=http://user-service:3001/api/v1
+      - PRODUCT_SERVICE_URL=http://product-service:3002/api/v1
+      - ORDER_SERVICE_URL=http://order-service:3003/api/v1
+      - SELLER_SERVICE_URL=http://seller-service:3007/api/v1
+      - INVENTORY_SERVICE_URL=http://inventory-service:3010/api/v1
+      - FULFILLMENT_SERVICE_URL=http://fulfillment-service:3008/api/v1
+      - SUPPORT_SERVICE_URL=http://support-service:3009/api/v1
+      - CART_SERVICE_URL=http://cart-service:3005/api/v1
+      - PAYMENT_SERVICE_URL=http://payment-service:3004/api/v1
+      - NOTIFICATION_SERVICE_URL=http://notification-service:3006/api/v1
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      - seller-service
+      - inventory-service
+      - fulfillment-service
+      - support-service
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
