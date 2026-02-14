@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   # ---------------------------
   # RabbitMQ
   # ---------------------------
@@ -198,18 +197,29 @@ services:
   # ---------------------------
 
   nginx:
-    image: nginx:alpine
-    container_name: nginx
-    restart: always
-    depends_on:
-      - gateway
-      - graphql-gateway
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - ecommerce-network
+   image: nginx:alpine
+   container_name: nginx
+   restart: always
+   depends_on:
+    - gateway
+    - graphql-gateway
+   ports:
+    - "80:80"
+    - "443:443"
+   volumes:
+    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    - ./certbot/conf:/etc/letsencrypt
+    - ./certbot/www:/var/www/certbot
+   networks:
+    - ecommerce-network
+
+    
+  certbot:
+   image: certbot/certbot
+   volumes:
+    - ./certbot/conf:/etc/letsencrypt
+    - ./certbot/www:/var/www/certbot
+
 
 # ---------------------------
 # Network
