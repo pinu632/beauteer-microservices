@@ -26,6 +26,7 @@ const OrderItemSchema = new mongoose.Schema({
             "DELIVERED",
             "CANCELLED",
             "RETURN_REQUESTED",
+            "RETURN_APPROVED",
             "RETURNED",
             "REFUNDED"
         ],

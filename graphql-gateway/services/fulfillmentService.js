@@ -3,6 +3,17 @@ const axios = require('axios');
 const FULFILLMENT_SERVICE_URL = process.env.FULFILLMENT_SERVICE_URL || 'http://localhost:3008/api/v1';
 
 const fulfillmentService = {
+    getAllReturns: async (token) => {
+        try {
+            const response = await axios.get(`${FULFILLMENT_SERVICE_URL}/returns`, {
+                headers: { Authorization: token }
+            });
+            return response.data.data;
+        } catch (error) {
+            console.error("Error fetching returns:", error.message);
+            return [];
+        }
+    },
     getShipmentByOrderId: async (orderId, token) => {
         try {
             // Assuming endpoint /shipments/order/:orderId exists or similar

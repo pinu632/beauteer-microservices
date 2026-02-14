@@ -160,6 +160,7 @@ export const handleReturnStatusUpdated = async (data) => {
     try {
         console.log("🔄 Processing RETURN_STATUS_UPDATED:", data);
         const { sellerOrderId, status } = data;
+        
 
         // Map Fulfillment status to OrderItem status if needed, 
         // or ensure they use same enum. 
@@ -168,6 +169,7 @@ export const handleReturnStatusUpdated = async (data) => {
 
         let targetStatus = status;
         // Simple mapping
+        if(status === 'APPROVED') targetStatus = 'RETURN_APPROVED';
         if (status === "RETURN_RECEIVED") targetStatus = "RETURNED";
         if (status === "REFUND_INITIATED") targetStatus = "REFUNDED"; // Or close to it
         // If status is not in OrderItem enum, it might fail validation if strict? 

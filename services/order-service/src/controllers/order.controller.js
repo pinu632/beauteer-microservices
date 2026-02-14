@@ -226,6 +226,24 @@ export const getOrderItemDetails = async (req, res, next) => {
     }
 }
 
+export const getOrderItemById = async (req, res, next) => {
+    try {
+        const { orderItemId } = req.params;
+        const orderItem = await OrderItem.findById(orderItemId);
+
+        if (!orderItem) {
+            return next(new AppError("Order Item not found", 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            data: orderItem
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const getOrderById = async (req, res, next) => {
     try {
         const { id } = req.params;

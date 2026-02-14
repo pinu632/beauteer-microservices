@@ -84,6 +84,24 @@ export const getTickets = async (req, res) => {
     }
 };
 
+export const getAllTickets = async (req, res) => {
+    try {
+        const { status, assignedAgentId, priority } = req.query;
+        const query = {};
+
+        console.log("api called")
+
+        if (status) query.status = status;
+        if (assignedAgentId) query.assignedAgentId = assignedAgentId;
+        if (priority) query.priority = priority;
+
+        const tickets = await Ticket.find(query).sort({ createdAt: -1 });
+        res.status(200).json({ status: 'success', results: tickets.length, data: tickets });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+};
+
 export const getTicketById = async (req, res) => {
     try {
         const ticket = await Ticket.findById(req.params.id);

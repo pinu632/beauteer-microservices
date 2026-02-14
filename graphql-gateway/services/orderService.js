@@ -53,6 +53,17 @@ const orderService = {
             return null;
         }
     },
+    getOrderItemById: async (orderItemId, token) => {
+        try {
+            const response = await axios.get(`${ORDER_SERVICE_URL}/orders/items/${orderItemId}`, {
+                headers: { Authorization: token }
+            });
+            return response.data.data;
+        } catch (error) {
+            console.error("Error fetching order item:", error.message);
+            return null;
+        }
+    },
     getAllOrders: async (token, status) => {
         try {
             const url = status

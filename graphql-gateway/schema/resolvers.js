@@ -103,6 +103,9 @@ const resolvers = {
         shipmentTracking: async (_, { orderId, orderItemId }, context) => {
             return await fulfillmentService.getShipmentTrackingDetails(orderId, orderItemId, context.token);
         },
+        returns: async (_, __, context) => {
+            return await fulfillmentService.getAllReturns(context.token);
+        },
 
         // Notification
         myNotifications: async (_, __, context) => {
@@ -113,8 +116,14 @@ const resolvers = {
         myTickets: async (_, __, context) => {
             return await supportService.getTickets(context.token);
         },
+        allTickets: async (_, args, context) => {
+            return await supportService.getAllTickets(context.token, args);
+        },
         ticket: async (_, { id }, context) => {
             return await supportService.getTicketById(id, context.token);
+        },
+        ticketMessages: async (_, { ticketId }, context) => {
+            return await supportService.getTicketMessages(ticketId, context.token);
         },
 
         // Inventory
@@ -273,6 +282,51 @@ const resolvers = {
                 return await sellerService.getSellerById(parent.sellerId, context.token);
             }
             return null;
+        }
+    },
+    ReturnRequest: {
+        user: async (parent, _, context) => {
+            if (parent.userId) {
+                return await userService.getUserById(parent.userId, context.token);
+            }
+            return null;
+        },
+        shipment: async (parent, _, context) => {
+            if (parent.shipmentId) {
+                return await fulfillmentService.trackShipment(parent.shipmentId, context.token);
+            }
+            return null;
+        },
+        products: async (parent, _, context) => {
+            if (!parent.sellerOrderId) return [];
+
+            const sellerOrder = await sellerService.getSellerOrderById(parent.sellerOrderId, context.token);
+            if (!sellerOrder || !Array.isArray(sellerOrder.items)) return [];
+
+            const productIds = [
+                ...new Set(
+                    sellerOrder.items
+                        .map(item => item.productId && item.productId.toString())
+                        .filter(Boolean)
+                )
+            ];
+
+            const products = await Promise.all(productIds.map((id) => productService.getProductById(id)));
+            return products.filter(Boolean);
+        }
+    },
+    Ticket: {
+        user: async (parent, _, context) => {
+            if (!parent.userId) return null;
+            return await userService.getUserById(parent.userId, context.token);
+        },
+        orderItem: async (parent, _, context) => {
+            if (!parent.orderItemId) return null;
+            return await orderService.getOrderItemById(parent.orderItemId, context.token);
+        },
+        sellerOrder: async (parent, _, context) => {
+            if (!parent.sellerOrderId) return null;
+            return await sellerService.getSellerOrderById(parent.sellerOrderId, context.token);
         }
     }
 };

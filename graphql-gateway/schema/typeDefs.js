@@ -218,6 +218,31 @@ type Address {
     location: String
   }
 
+  type ReturnEvent {
+    status: String
+    date: Date
+    remark: String
+  }
+
+  type ReturnRequest {
+    _id: ID!
+    sellerOrderId: ID
+    shipmentId: ID
+    userId: ID
+    reason: String
+    description: String
+    images: [String]
+    status: String
+    statusColor: String
+    adminComment: String
+    events: [ReturnEvent]
+    createdAt: Date
+    updatedAt: Date
+    user: User
+    shipment: Shipment
+    products: [Product]
+  }
+
   type Notification {
     _id: ID!
     userId: ID
@@ -269,20 +294,37 @@ type Address {
 
   type Ticket {
     _id: ID!
+    ticketId: String
     userId: ID
+    sellerOrderId: ID
+    orderItemId: ID
+    sellerId: ID
     subject: String
-    message: String
+    description: String
+    type: String
     status: String
     priority: String
+    source: String
+    tags: [String]
+    user: User
+    orderItem: OrderItem
+    sellerOrder: SellerOrder
     category: String
-    responses: [TicketResponse]
+    subCategory: String
     createdAt: Date
+    updatedAt: Date
   }
 
-  type TicketResponse {
-    responderId: ID
+  type TicketMessage {
+    _id: ID!
+    ticketId: ID
+    senderType: String
+    senderId: ID
     message: String
+    attachments: [String]
+    isInternal: Boolean
     createdAt: Date
+    updatedAt: Date
   }
 
   type ProductSummary {
@@ -338,13 +380,16 @@ type Address {
     shipment(id: ID!): Shipment
     shipmentByOrder(orderId: ID!): Shipment
     shipmentTracking(orderId: ID!, orderItemId: ID!): ShipmentTrackingDetails
+    returns: [ReturnRequest]
 
     # Notification
     myNotifications: NotificationResponse
 
     # Support
     myTickets: [Ticket]
+    allTickets(status: String, priority: String, assignedAgentId: ID): [Ticket]
     ticket(id: ID!): Ticket
+    ticketMessages(ticketId: ID!): [TicketMessage]
     
     # Inventory
     allInventory: [Inventory]
