@@ -13,7 +13,7 @@ const ticketSchema = new mongoose.Schema({
 
     type: {
         type: String,
-        enum: ["GRIEVANCE", "REFUND", "RETURN", "PAYMENT", "TECHNICAL", "GENERAL","SUPPORT"],
+        enum: ["GRIEVANCE", "REFUND", "RETURN", "PAYMENT", "TECHNICAL", "GENERAL", "SUPPORT"],
         default: "GENERAL"
     },
 

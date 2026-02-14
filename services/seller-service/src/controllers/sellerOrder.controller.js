@@ -54,3 +54,23 @@ export const getAllSellerOrder = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getSellerOrderById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const sellerOrder = await SellerOrder.findById(id);
+
+        if (!sellerOrder) {
+            const error = new Error('Seller order not found');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        res.status(200).json({
+            status: 'success',
+            data: sellerOrder
+        });
+    } catch (error) {
+        next(error);
+    }
+}

@@ -4,6 +4,24 @@ import { publishToQueue } from '../utils/publisher.js';
 
 
 
+export const getAllReturns = async (req, res) => {
+    try {
+        const query = {};
+        const role = req.user?.role;
+
+        // Non-admin users can only view their own return requests.
+        if (role !== 'admin' && role !== 'super-admin') {
+            query.userId = req.user?.id;
+        }
+
+        const returns = await Return.find(query).sort({ createdAt: -1 });
+        res.status(200).json({ status: 'success', results: returns.length, data: returns });
+    } catch (error) {
+        console.log(err.message)
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+};
+
 export const requestReturn = async (req, res) => {
     try {
 
@@ -58,6 +76,7 @@ export const updateReturnStatus = async (req, res) => {
 
         if (!returnReq) return res.status(404).json({ status: 'error', message: 'Return request not found' });
 
+        console.log(status)
         returnReq.status = status;
         returnReq.events.push({
             status,

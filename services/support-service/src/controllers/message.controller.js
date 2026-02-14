@@ -68,3 +68,19 @@ export const getMessages = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getMessagesByTicketId = async (req, res) => {
+    try {
+        const { ticketId } = req.params;
+
+        const ticket = await Ticket.findById(ticketId);
+        if (!ticket) {
+            return res.status(404).json({ message: 'Ticket not found' });
+        }
+
+        const messages = await TicketMessage.find({ ticketId }).sort({ createdAt: 1 });
+        res.status(200).json({ status: 'success', results: messages.length, data: messages });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

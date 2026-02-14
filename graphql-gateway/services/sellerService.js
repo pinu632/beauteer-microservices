@@ -29,6 +29,17 @@ const sellerService = {
             console.error("Error fetching all seller orders:", error.message);
             return null;
         }
+    },
+    getSellerOrderById: async (id, token) => {
+        try {
+            const response = await axios.get(`${SELLER_SERVICE_URL}/sellers/orders/${id}`, {
+                headers: { Authorization: token }
+            });
+            return response.data.data;
+        } catch (error) {
+            console.error("Error fetching seller order:", error.message);
+            return null;
+        }
     }
 };
 
