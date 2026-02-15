@@ -14,6 +14,7 @@ const paymentService = {
             return null;
         }
     },
+
     getPaymentByOrderId: async (orderId, token) => {
         try {
             const response = await axios.get(`${PAYMENT_SERVICE_URL}/payments/order/${orderId}`, {
@@ -25,7 +26,20 @@ const paymentService = {
             // It is normal not to find payment for new orders
             return null;
         }
+    },
+    getAllPaymentLogs: async (token, params = {}) => {
+        try {
+            const response = await axios.get(`${PAYMENT_SERVICE_URL}/payments/logs`, {
+                headers: { Authorization: token },
+                params
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching payment logs:", error.message);
+            return null;
+        }
     }
+
 };
 
 module.exports = paymentService;

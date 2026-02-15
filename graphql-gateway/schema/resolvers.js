@@ -35,7 +35,7 @@ const resolvers = {
         // Product
         products: async (_, { page, limit, category, search }) => {
             // Updated productService might support category/search, passing params
-            return await productService.getAllProducts({ page, limit, category,search });
+            return await productService.getAllProducts({ page, limit, category, search });
         },
         product: async (_, { id }) => {
             return await productService.getProductById(id);
@@ -91,6 +91,9 @@ const resolvers = {
         },
         paymentByOrder: async (_, { orderId }, context) => {
             return await paymentService.getPaymentByOrderId(orderId, context.token);
+        },
+        allPaymentLogs: async (_, args, context) => {
+            return await paymentService.getAllPaymentLogs(context.token, args);
         },
 
         // Fulfillment
@@ -219,8 +222,8 @@ const resolvers = {
             return null;
         }
     },
-    SellerOrder:{
-         user: async (parent, _, context) => {
+    SellerOrder: {
+        user: async (parent, _, context) => {
             if (parent.userId) {
                 return await userService.getUserById(parent.userId, context.token);
             }
@@ -238,7 +241,7 @@ const resolvers = {
             }
             return null;
         }
-       
+
     },
     Seller: {
         products: async (parent) => {
@@ -327,6 +330,34 @@ const resolvers = {
         sellerOrder: async (parent, _, context) => {
             if (!parent.sellerOrderId) return null;
             return await sellerService.getSellerOrderById(parent.sellerOrderId, context.token);
+        }
+    },
+    Payment: {
+        user: async (parent, _, context) => {
+            if (parent.userId) {
+                return await userService.getUserById(parent.userId, context.token);
+            }
+            return null;
+        },
+        order: async (parent, _, context) => {
+            if (parent.orderId) {
+                return await orderService.getOrderById(parent.orderId, context.token);
+            }
+            return null;
+        }
+    },
+    PaymentTransaction: {
+        orderItem: async (parent, _, context) => {
+            if (parent.orderItemId) {
+                return await orderService.getOrderItemDetails(parent.orderItemId, null, context.token);
+            }
+            return null;
+        },
+        sellerOrder: async (parent, _, context) => {
+            if (parent.sellerOrderId) {
+                return await sellerService.getSellerOrderById(parent.sellerOrderId, context.token);
+            }
+            return null;
         }
     }
 };
