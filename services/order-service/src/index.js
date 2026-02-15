@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { connectDB } from './utils/db.js';
 import { connectRabbitMQ } from './utils/rabbitmq.js';
 import orderRoutes from './routes/order.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
 import logger from './logs/logger.js';
 import { startWorker } from './workers/index.js';
 
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
