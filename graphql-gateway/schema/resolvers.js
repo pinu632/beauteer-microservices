@@ -13,8 +13,8 @@ const marketingService = require('../services/marketingService');
 const resolvers = {
     Query: {
         // User
-        users: async (_, __, context) => {
-            return await userService.getAllUsers(context.token);
+        users: async (_, { role }, context) => {
+            return await userService.getAllUsers(context.token, role);
         },
         user: async (_, { id }, context) => {
             return await userService.getUserById(id, context.token);

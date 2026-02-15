@@ -14,10 +14,11 @@ const userService = {
             return null;
         }
     },
-    getAllUsers: async (token) => {
+    getAllUsers: async (token, role) => {
         try {
             const response = await axios.get(`${USER_SERVICE_URL}/users`, {
-                headers: { Authorization: token }
+                headers: { Authorization: token },
+                params: { role }
             });
             return response.data.data;
         } catch (error) {
