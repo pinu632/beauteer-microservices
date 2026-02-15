@@ -396,6 +396,26 @@ const resolvers = {
             }
             return null;
         }
+    },
+    Campaign: {
+        applicableProducts: async (parent) => {
+            if (parent.applicableProducts && parent.applicableProducts.length > 0) {
+                const products = await Promise.all(
+                    parent.applicableProducts.map(id => productService.getProductById(id))
+                );
+                return products.filter(Boolean);
+            }
+            return [];
+        },
+        applicableCategories: async (parent) => {
+            if (parent.applicableCategories && parent.applicableCategories.length > 0) {
+                const categories = await Promise.all(
+                    parent.applicableCategories.map(id => productService.getCategoryById(id))
+                );
+                return categories.filter(Boolean);
+            }
+            return [];
+        }
     }
 };
 

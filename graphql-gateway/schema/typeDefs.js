@@ -453,6 +453,18 @@ type Address {
     # For now, these are the requested integrations.
   }
 
+  input CampaignDiscountInput {
+    type: String
+    value: Float
+    maxDiscount: Float
+  }
+
+  type CampaignDiscount {
+    type: String
+    value: Float
+    maxDiscount: Float
+  }
+
   type Campaign {
     _id: ID!
     title: String!
@@ -464,6 +476,14 @@ type Address {
     isActive: Boolean
     link: String
     platform: String
+    discount: CampaignDiscount
+    applicableProducts: [Product]
+    applicableCategories: [Category]
+    couponCode: String
+    minOrderValue: Float
+    impressions: Int
+    clicks: Int
+    conversions: Int
     createdAt: Date
     updatedAt: Date
   }
@@ -499,8 +519,40 @@ type Address {
 
   extend type Mutation {
       # Marketing - Campaign
-      createCampaign(title: String!, description: String, type: String, imageUrl: String, startDate: Date, endDate: Date, isActive: Boolean, link: String, platform: String): Campaign
-      updateCampaign(id: ID!, title: String, description: String, type: String, imageUrl: String, startDate: Date, endDate: Date, isActive: Boolean, link: String, platform: String): Campaign
+      
+      createCampaign(
+        title: String!, 
+        description: String, 
+        type: String, 
+        imageUrl: String, 
+        startDate: Date, 
+        endDate: Date, 
+        isActive: Boolean, 
+        link: String, 
+        platform: String,
+        discount: CampaignDiscountInput,
+        applicableProducts: [ID],
+        applicableCategories: [ID],
+        couponCode: String,
+        minOrderValue: Float
+      ): Campaign
+      updateCampaign(
+        id: ID!, 
+        title: String, 
+        description: String, 
+        type: String, 
+        imageUrl: String, 
+        startDate: Date, 
+        endDate: Date, 
+        isActive: Boolean, 
+        link: String, 
+        platform: String,
+        discount: CampaignDiscountInput,
+        applicableProducts: [ID],
+        applicableCategories: [ID],
+        couponCode: String,
+        minOrderValue: Float
+      ): Campaign
       deleteCampaign(id: ID!): String
 
       # Marketing - Banner
