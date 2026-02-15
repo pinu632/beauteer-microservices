@@ -8,6 +8,7 @@ const paymentService = require('../services/paymentService');
 const fulfillmentService = require('../services/fulfillmentService');
 const notificationService = require('../services/notificationService');
 const supportService = require('../services/supportService');
+const marketingService = require('../services/marketingService');
 
 const resolvers = {
     Query: {
@@ -132,6 +133,20 @@ const resolvers = {
         // Inventory
         allInventory: async (_, __, context) => {
             return await inventoryService.getAllInventory();
+        },
+
+        // Marketing
+        allCampaigns: async (_, args, context) => {
+            return await marketingService.getAllCampaigns(context.token, args);
+        },
+        campaign: async (_, { id }, context) => {
+            return await marketingService.getCampaignById(id, context.token);
+        },
+        allBanners: async (_, args, context) => {
+            return await marketingService.getAllBanners(context.token, args);
+        },
+        banner: async (_, { id }, context) => {
+            return await marketingService.getBannerById(id, context.token);
         }
     },
 
@@ -152,6 +167,28 @@ const resolvers = {
         // Support
         createTicket: async (_, { subject, message }, context) => {
             return await supportService.createTicket(subject, message, context.token);
+        },
+
+        // Marketing
+        createCampaign: async (_, args, context) => {
+            return await marketingService.createCampaign(args, context.token);
+        },
+        updateCampaign: async (_, args, context) => {
+            const { id, ...data } = args;
+            return await marketingService.updateCampaign(id, data, context.token);
+        },
+        deleteCampaign: async (_, { id }, context) => {
+            return await marketingService.deleteCampaign(id, context.token);
+        },
+        createBanner: async (_, args, context) => {
+            return await marketingService.createBanner(args, context.token);
+        },
+        updateBanner: async (_, args, context) => {
+            const { id, ...data } = args;
+            return await marketingService.updateBanner(id, data, context.token);
+        },
+        deleteBanner: async (_, { id }, context) => {
+            return await marketingService.deleteBanner(id, context.token);
         }
     },
 

@@ -452,6 +452,62 @@ type Address {
     # specific services handling complex flows via their own APIs or orchestrators.
     # For now, these are the requested integrations.
   }
+
+  type Campaign {
+    _id: ID!
+    title: String!
+    description: String
+    type: String
+    imageUrl: String
+    startDate: Date
+    endDate: Date
+    isActive: Boolean
+    link: String
+    platform: String
+    createdAt: Date
+    updatedAt: Date
+  }
+  
+  scalar DimensionValue
+  scalar ImageStyle
+
+  type Banner {
+    _id: ID!
+    title: String!
+    description: String!
+    imageUrl: String!
+    imageStyle: ImageStyle
+    leftSideWidth: DimensionValue
+    rightSideWidth: DimensionValue
+    ctaText: String!
+    ctaLink: String!
+    backgroundColor: String
+    accentColor: String
+    isActive: Boolean
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  extend type Query {
+     # Marketing
+     allCampaigns(isActive: Boolean, type: String): [Campaign]
+     campaign(id: ID!): Campaign
+     
+     allBanners(isActive: Boolean): [Banner]
+     banner(id: ID!): Banner
+  }
+
+  extend type Mutation {
+      # Marketing - Campaign
+      createCampaign(title: String!, description: String, type: String, imageUrl: String, startDate: Date, endDate: Date, isActive: Boolean, link: String, platform: String): Campaign
+      updateCampaign(id: ID!, title: String, description: String, type: String, imageUrl: String, startDate: Date, endDate: Date, isActive: Boolean, link: String, platform: String): Campaign
+      deleteCampaign(id: ID!): String
+
+      # Marketing - Banner
+      createBanner(title: String!, description: String!, imageUrl: String!, imageStyle: ImageStyle, leftSideWidth: DimensionValue, rightSideWidth: DimensionValue, ctaText: String!, ctaLink: String!, backgroundColor: String, accentColor: String, isActive: Boolean): Banner
+      updateBanner(id: ID!, title: String, description: String, imageUrl: String, imageStyle: ImageStyle, leftSideWidth: DimensionValue, rightSideWidth: DimensionValue, ctaText: String, ctaLink: String, backgroundColor: String, accentColor: String, isActive: Boolean): Banner
+      deleteBanner(id: ID!): String
+  }
 `;
 
 module.exports = typeDefs;

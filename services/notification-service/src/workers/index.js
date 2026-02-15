@@ -206,6 +206,22 @@ const handleEvent = async (event, data) => {
             actionValue = `app://review/${data.orderId}`;
             break;
 
+        case EVENTS.CAMPAIGN_NOTIFICATION:
+            title = data.title;
+            body = data.description || "Check out our new campaign!";
+            category = NOTIFICATION_CATEGORIES.MARKETING;
+            entityType = "Campaign";
+            entityId = data._id;
+            // Handle image logic if present
+            if (data.imageUrl) imageUrl = data.imageUrl;
+
+            // Handle Action if present
+            if (data.link) {
+                actionType = "DEEPLINK";
+                actionValue = data.link;
+            }
+            break;
+
         default:
             console.log(`Unhandled event type: ${event}`);
             return;

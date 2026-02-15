@@ -3,20 +3,17 @@ import mongoose from "mongoose";
 const notificationSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         index: true
     },
 
     eventKey: {
         type: String, // e.g. ORDER_SHIPPED, CART_ABANDONED_1H
-        required: true,
         index: true
     },
 
     category: {
         type: String,
         enum: ["ORDER", "SUPPORT", "MARKETING", "SYSTEM"],
-        required: true
     },
 
     title: String,
@@ -47,7 +44,6 @@ const notificationSchema = new mongoose.Schema({
     },
 
     expiresAt: Date, // marketing notifications auto-expire
-
     sentAt: Date
 
 }, { timestamps: true });

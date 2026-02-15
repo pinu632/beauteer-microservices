@@ -34,6 +34,7 @@ app.use('/sellers', proxy('http://seller-service:3007'));
 app.use('/fulfillment', proxy('http://fulfillment-service:3008'));
 app.use('/inventory', proxy('http://inventory-service:3010'));
 app.use('/support', proxy('http://support-service:3009'));
+app.use('/marketing', proxy('http://marketing-service:3011'));
 
 app.listen(port, async () => {
     console.log(`Gateway running on port ${port}`);
