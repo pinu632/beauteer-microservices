@@ -368,7 +368,7 @@ type Address {
   type Query {
     # User
     me: User
-    users: [User]
+    users(role: String): [User]
     user(id: ID!): User
     myAddresses: [Address]
     
