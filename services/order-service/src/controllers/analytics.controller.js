@@ -1,4 +1,4 @@
-import ParentOrder from "../models/parentOrder.model.js";
+import {ParentOrder} from "../models/parentOrder.model.js";
 import OrderItem from "../models/orderItem.model.js";
 import AppError from "../handlers/AppError.js";
 import { startOfDay, endOfDay, subDays } from "date-fns";
