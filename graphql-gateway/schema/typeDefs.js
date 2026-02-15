@@ -373,7 +373,7 @@ type Address {
     myAddresses: [Address]
     
     # Product
-    products(page: Int, limit: Int, category: String, search: String): [Product]
+    products(page: Int, limit: Int, category: [String], brand: [String], minPrice: Float, maxPrice: Float, search: String, sort: String): [Product]
     product(id: ID!): Product
     popularProducts(page: Int, limit: Int): [ProductSummary]
     recommendedProducts: [RecommendedProductSection]

@@ -34,9 +34,23 @@ const resolvers = {
         },
 
         // Product
-        products: async (_, { page, limit, category, search }) => {
-            // Updated productService might support category/search, passing params
-            return await productService.getAllProducts({ page, limit, category, search });
+        products: async (_, { page, limit, category, brand, minPrice, maxPrice, search, sort }) => {
+            const params = {
+                pageNum: page,
+                pageSize: limit,
+                category,
+                brand,
+                search,
+                sort
+            };
+
+            if (minPrice !== undefined || maxPrice !== undefined) {
+                params.price = {};
+                if (minPrice !== undefined) params.price.gte = minPrice;
+                if (maxPrice !== undefined) params.price.lte = maxPrice;
+            }
+
+            return await productService.getAllProducts(params);
         },
         product: async (_, { id }) => {
             return await productService.getProductById(id);
