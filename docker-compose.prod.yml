@@ -52,6 +52,7 @@ services:
       - CART_SERVICE_URL=http://cart-service:3005/api/v1
       - PAYMENT_SERVICE_URL=http://payment-service:3004/api/v1
       - NOTIFICATION_SERVICE_URL=http://notification-service:3006/api/v1
+      - MARKETING_SERVICE_URL=http://marketing-service:3011/api/v1
     depends_on:
       - user-service
       - product-service
@@ -63,6 +64,7 @@ services:
       - cart-service
       - payment-service
       - notification-service
+      - marketing-service
     networks:
       - ecommerce-network
     expose:
@@ -191,6 +193,18 @@ services:
       - ecommerce-network
     expose:
       - "3010"
+  
+  marketing-service:
+    build: ./services/marketing-service
+    command: npm run dev
+    restart: always
+    environment:
+      - PORT=3011
+      - RABBITMQ_URL=amqp://rabbitmq
+    networks:
+      - ecommerce-network
+    expose:
+      - "3011"
 
   # ---------------------------
   # NGINX Reverse Proxy
