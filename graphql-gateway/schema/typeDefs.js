@@ -193,7 +193,30 @@ type Address {
     status: String
     gateway: String
     transactionId: String
+    user: User
+    order: Order
+    transactions: [PaymentTransaction]
     createdAt: Date
+  }
+
+  type PaymentTransaction {
+    transactionId: String
+    amount: Float
+    method: String
+    status: String
+    collectedAt: Date
+    orderItemId: ID
+    sellerOrderId: ID
+    orderItem: OrderItem
+    sellerOrder: SellerOrder
+  }
+
+  type PaymentLogResponse {
+    status: String
+    data: [Payment]
+    totalPages: Int
+    currentPage: Int
+    totalUtils: Int
   }
 
   type Shipment {
@@ -374,6 +397,7 @@ type Address {
 
     # Payment
     payment(id: ID!): Payment
+    allPaymentLogs(page: Int, limit: Int, status: String, search: String): PaymentLogResponse
     paymentByOrder(orderId: ID!): Payment
 
     # Fulfillment
