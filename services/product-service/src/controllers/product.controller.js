@@ -18,7 +18,11 @@ export const createProduct = async (req, res) => {
             ingredients,
             skinType,
             howToUse,
-            isActive
+            isActive,
+            price,
+            discountPrice,
+            inventoryId,
+            images
         } = req.body;
 
         // Validate Category
@@ -49,7 +53,11 @@ export const createProduct = async (req, res) => {
             ingredients,
             skinType,
             howToUse,
-            isActive
+            isActive,
+            price,
+            discountPrice,
+            inventoryId,
+            images
         };
 
         const product = await productHelper.addObject(productData);
@@ -172,7 +180,7 @@ export const getProducts = async (req, res) => {
                 query.$or = orConditions;
             }
 
-        }           
+        }
 
         // Category Filter (support multiple)
         if (category) {
